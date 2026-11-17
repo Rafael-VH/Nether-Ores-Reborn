@@ -43,6 +43,16 @@ public final class NetherOresRebornConfig {
     private NetherOresRebornConfig() {
     }
 
+    public static OreSettings getOreSettings(String oreKey) {
+        return switch (oreKey) {
+            case "basalt_coal_ore" -> BASALT_COAL_ORE;
+            case "basalt_diamond_ore" -> BASALT_DIAMOND_ORE;
+            case "blackstone_iron_ore" -> BLACKSTONE_IRON_ORE;
+            case "netherrack_iron_ore" -> NETHERRACK_IRON_ORE;
+            default -> null;
+        };
+    }
+
     /**
      * Per-ore configuration values.
      */

@@ -2,23 +2,15 @@
   "feature": "nether_ores_reborn:basalt_diamond_ore",
   "placement": [
     {
-      "type": "minecraft:count",
-      "count": 2
+      "type": "nether_ores_reborn:config_count",
+      "ore": "basalt_diamond_ore"
     },
     {
       "type": "minecraft:in_square"
     },
     {
-      "type": "minecraft:height_range",
-      "height": {
-        "type": "minecraft:uniform",
-        "min_inclusive": {
-          "above_bottom": 5
-        },
-        "max_inclusive": {
-          "below_top": 10
-        }
-      }
+      "type": "nether_ores_reborn:config_uniform_height_range",
+      "ore": "basalt_diamond_ore"
     },
     {
       "type": "minecraft:biome"

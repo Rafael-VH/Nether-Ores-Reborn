@@ -7,6 +7,7 @@ import com.rexthar.netheroresreborn.registry.ModBlocks;
 import com.rexthar.netheroresreborn.registry.ModCreativeTabs;
 import com.rexthar.netheroresreborn.registry.ModItems;
 import com.rexthar.netheroresreborn.util.ModConstants;
+import com.rexthar.netheroresreborn.worldgen.placement.ModPlacementModifiers;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -31,6 +32,7 @@ public class NetherOresReborn {
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModLootModifiers.LOOT_MODIFIER_SERIALIZERS.register(modEventBus);
+        ModPlacementModifiers.PLACEMENT_MODIFIER_TYPES.register(modEventBus);
 
         context.registerConfig(ModConfig.Type.COMMON, NetherOresRebornConfig.SPEC, "nether-ores-reborn.toml");
 

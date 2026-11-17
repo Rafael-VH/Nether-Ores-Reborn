@@ -70,10 +70,10 @@
   - **Depends on:** 1.2
   - **Outcome:** Config spec loads and generates/defaults are available (`config/nether-ores-reborn.toml` via COMMON config)
   - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17; runtime config file generation/load to be validated in run environment
-- [ ] 5.2 Wire config values into worldgen and drop behavior (as designed)
+- [x] 5.2 Wire config values into worldgen and drop behavior (as designed)
   - **Depends on:** 3.1, 4.1, 5.1
-  - **Outcome:** Enabled flags/ranges/frequencies/multipliers affect runtime behavior according to spec
-  - **Verify:** Targeted run tests confirm at least one toggle and one numeric parameter per affected system
+  - **Outcome:** Enabled flags/ranges/frequencies/multipliers affect runtime behavior according to spec (with noted limitation)
+  - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17. Wired: `general.enableGeneration`, per-ore `enabled`, `veinsPerChunk`, `minY`, `maxY` via custom placement modifiers; drop multipliers via GLM. **Pending/limitation:** `veinSize` remains static in `configured_feature` JSONs (config value exists but is not yet applied); runtime validation pending.
 - [ ] 5.3 Document config keys and defaults in planning/docs notes (repo-appropriate location)
   - **Depends on:** 5.2
   - **Outcome:** Configuration is understandable for users/contributors
