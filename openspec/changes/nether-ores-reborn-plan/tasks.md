@@ -95,15 +95,15 @@
 - [ ] 7.1 Run full baseline verification (build + client/server smoke tests)
   - **Depends on:** 3.2, 4.2, 5.2, 6.1, 6.2
   - **Outcome:** Baseline mod is stable enough for iterative use on 1.20.1
-  - **Verify:** `./gradlew build` passes; client and server runs start and core features function
-- [ ] 7.2 Clean-room and packaging hygiene check
+  - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17; client/server smoke tests and in-game feature validation (3.2, 4.2, visual/config runtime checks) remain pending manual execution
+- [x] 7.2 Clean-room and packaging hygiene check
   - **Depends on:** 7.1
-  - **Outcome:** No original mod assets/code/decompiled artifacts in repo or build outputs
-  - **Verify:** Manual audit of repo/build artifacts and `.gitignore` coverage
-- [ ] 7.3 Capture porting notes for next Minecraft versions
+  - **Outcome:** No original mod assets/code/decompiled artifacts found in tracked repo files or inspected build jar
+  - **Verify:** `git ls-files` scan showed no `reference/`/`recursos/`/original-mod identifiers; `.gitignore` covers local/reference/build outputs; `build/libs/nether_ores_reborn-0.1.0.jar` entry scan found no `reference`/`recursos`/`netheroresplus` hits (2026-11-17)
+- [x] 7.3 Capture porting notes for next Minecraft versions
   - **Depends on:** 7.1
   - **Outcome:** Documented list of version-sensitive areas (worldgen/config/registries/data) and upgrade priorities
-  - **Verify:** Notes added to project docs/change artifacts for future SDD changes
+  - **Verify:** Added `docs/PORTING_NOTES.md` (2026-11-17)
 
 ## Cross-Cutting / Tracking Tasks
 
