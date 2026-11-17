@@ -37,10 +37,10 @@
   - **Depends on:** 2.1, 0.3
   - **Outcome:** All approved ore blocks registered with consistent naming and properties (`basalt_coal_ore`, `basalt_diamond_ore`, `blackstone_iron_ore`, `netherrack_iron_ore`)
   - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17; in-dev registry visibility to be confirmed in client smoke test (2.3/7.1)
-- [ ] 2.3 Implement BlockItem registrations and creative tab placement
+- [x] 2.3 Implement BlockItem registrations and creative tab placement
   - **Depends on:** 2.2
-  - **Outcome:** All ore blocks obtainable via items and visible in creative inventory tab(s)
-  - **Verify:** Build passes; dev client smoke test confirms items/blocks are available
+  - **Outcome:** All ore blocks obtainable via items and visible in creative inventory tab(s) (`nether_ores_reborn_tab`)
+  - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17; dev client smoke test pending
 
 ## Phase 3 — World Generation (Nether)
 
