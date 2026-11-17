@@ -74,10 +74,10 @@
   - **Depends on:** 3.1, 4.1, 5.1
   - **Outcome:** Enabled flags/ranges/frequencies/multipliers affect runtime behavior according to spec (with noted limitation)
   - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17. Wired: `general.enableGeneration`, per-ore `enabled`, `veinsPerChunk`, `minY`, `maxY` via custom placement modifiers; drop multipliers via GLM. **Pending/limitation:** `veinSize` remains static in `configured_feature` JSONs (config value exists but is not yet applied); runtime validation pending.
-- [ ] 5.3 Document config keys and defaults in planning/docs notes (repo-appropriate location)
+- [x] 5.3 Document config keys and defaults in planning/docs notes (repo-appropriate location)
   - **Depends on:** 5.2
   - **Outcome:** Configuration is understandable for users/contributors
-  - **Verify:** Documentation matches implemented keys/defaults
+  - **Verify:** Added `docs/CONFIG.md` documenting implemented keys/defaults and current limitations (2026-11-17)
 
 ## Phase 6 — Original Assets and Localization
 
