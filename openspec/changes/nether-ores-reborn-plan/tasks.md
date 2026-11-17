@@ -33,10 +33,10 @@
   - **Depends on:** 1.3
   - **Outcome:** Mod entrypoint initializes registries and common constants (`ModConstants`, `ModBlocks`, `ModItems`, `ModCreativeTabs`)
   - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17
-- [ ] 2.2 Implement block registrations for approved Netherrack/Basalt/Blackstone ore variants
+- [x] 2.2 Implement block registrations for approved Netherrack/Basalt/Blackstone ore variants
   - **Depends on:** 2.1, 0.3
-  - **Outcome:** All approved ore blocks registered with consistent naming and properties
-  - **Verify:** Build passes; blocks appear in dev environment registry/logs as expected
+  - **Outcome:** All approved ore blocks registered with consistent naming and properties (`basalt_coal_ore`, `basalt_diamond_ore`, `blackstone_iron_ore`, `netherrack_iron_ore`)
+  - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17; in-dev registry visibility to be confirmed in client smoke test (2.3/7.1)
 - [ ] 2.3 Implement BlockItem registrations and creative tab placement
   - **Depends on:** 2.2
   - **Outcome:** All ore blocks obtainable via items and visible in creative inventory tab(s)
