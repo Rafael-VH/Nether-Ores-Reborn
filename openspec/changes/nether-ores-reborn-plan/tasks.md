@@ -55,10 +55,10 @@
 
 ## Phase 4 — Loot Tables and Drops
 
-- [ ] 4.1 Create original loot table JSON files for each ore block
+- [x] 4.1 Create original loot table JSON files for each ore block
   - **Depends on:** 2.2, 0.3
   - **Outcome:** Each approved ore block has a corresponding loot table under `data/nether-ores-reborn/loot_tables/blocks/`
-  - **Verify:** JSON is valid; build/data load passes
+  - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17; in-game drop validation pending (4.2)
 - [ ] 4.2 Validate drop behavior in-game
   - **Depends on:** 4.1
   - **Outcome:** Breaking ores yields intended drops (baseline behavior)
