@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "nether_ores_reborn:basalt_coal_ore",
+    "nether_ores_reborn:basalt_diamond_ore",
+    "nether_ores_reborn:blackstone_iron_ore",
+    "nether_ores_reborn:netherrack_iron_ore"
+  ]
+}
