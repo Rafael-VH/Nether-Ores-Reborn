@@ -1,0 +1,5 @@
+﻿{
+  "variants": {
+    "": { "model": "nether_ores_reborn:block/netherrack_iron_ore" }
+  }
+}

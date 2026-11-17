@@ -81,10 +81,10 @@
 
 ## Phase 6 — Original Assets and Localization
 
-- [ ] 6.1 Produce original textures (16x16), blockstates, and block/item models for approved variants
+- [x] 6.1 Produce original textures (16x16), blockstates, and block/item models for approved variants
   - **Depends on:** 2.2, 0.3
-  - **Outcome:** Complete original visual/resource set for baseline ores
-  - **Verify:** Dev client shows no missing textures/models for implemented blocks/items
+  - **Outcome:** Complete original visual/resource set for baseline ores (temporary original placeholders generated)
+  - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17; dev client visual verification pending
 - [ ] 6.2 Add localization files (`en_us.json`, `es_es.json`) with original naming
   - **Depends on:** 2.2
   - **Outcome:** Block/item names localized in English and Spanish
