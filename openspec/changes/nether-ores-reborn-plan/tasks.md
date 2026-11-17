@@ -29,10 +29,10 @@
 
 ## Phase 2 — Core Registries and Content Skeleton
 
-- [ ] 2.1 Create main mod class and shared constants/utilities
+- [x] 2.1 Create main mod class and shared constants/utilities
   - **Depends on:** 1.3
-  - **Outcome:** Mod entrypoint initializes registries and common constants
-  - **Verify:** `./gradlew build` passes
+  - **Outcome:** Mod entrypoint initializes registries and common constants (`ModConstants`, `ModBlocks`, `ModItems`, `ModCreativeTabs`)
+  - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17
 - [ ] 2.2 Implement block registrations for approved Netherrack/Basalt/Blackstone ore variants
   - **Depends on:** 2.1, 0.3
   - **Outcome:** All approved ore blocks registered with consistent naming and properties
