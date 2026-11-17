@@ -21,3 +21,30 @@ recursos/
 
 # Antigravity CLI local config
 .antigravitycli/
+# Eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# IntelliJ IDEA
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# Gradle / Forge
+build
+.gradle
+eclipse
+run
+run-data
+forge*changelog.txt
+mcmodsrepo
+
+# Logs
+*.log
+logs/

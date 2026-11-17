@@ -18,14 +18,14 @@
   - **Depends on:** 0.3
   - **Outcome:** Agreed identifiers documented: `mod_id=nether_ores_reborn`, package `com.rexthar.netheroresreborn`, display name `Nether Ores Reborn`, initial version `0.1.0` (2026-11-17)
   - **Verify:** User-confirmed values recorded in `AGENTS.md` and SDD plan artifacts; to be reflected in scaffolded mod metadata during Phase 1.2
-- [ ] 1.2 Initialize project from official Forge 1.20.1 MDK (Java 17 / ForgeGradle)
+- [x] 1.2 Initialize project from official Forge 1.20.1 MDK (Java 17 / ForgeGradle)
   - **Depends on:** 1.1
-  - **Outcome:** Clean MDK-based project structure in repo (no MCreator artifacts)
-  - **Verify:** Project files present; `./gradlew build` succeeds on template state
-- [ ] 1.3 Configure repository hygiene for baseline workflow
+  - **Outcome:** Clean MDK-based project structure in repo (no MCreator artifacts), customized for `nether_ores_reborn` / `com.rexthar.netheroresreborn`
+  - **Verify:** MDK 1.20.1-47.4.28 files integrated; `.\gradlew.bat build` **BUILD SUCCESSFUL** (Java 17 toolchain via `JAVA_HOME=C:\Program Files\Java\jdk-17`) on 2026-11-17
+- [x] 1.3 Configure repository hygiene for baseline workflow
   - **Depends on:** 1.2
-  - **Outcome:** `.gitignore` includes `/reference/`, `/recursos/`, `/run/`, `/build/`, `.gradle/`, jar rules per plan
-  - **Verify:** `git status` clean of generated/local-only artifacts after build/run setup
+  - **Outcome:** `.gitignore` includes `/reference/`, `/recursos/`, `/run/`, `/build/`, `.gradle/` and additional Forge/IDE/log ignores
+  - **Verify:** Generated build artifacts are ignored (`git check-ignore` confirms `build`, `.gradle`); local reference/resources remain untracked/ignored (2026-11-17)
 
 ## Phase 2 — Core Registries and Content Skeleton
 
