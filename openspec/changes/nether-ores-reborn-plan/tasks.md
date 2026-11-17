@@ -44,10 +44,10 @@
 
 ## Phase 3 — World Generation (Nether)
 
-- [ ] 3.1 Design and implement baseline worldgen definitions for ore placement (configured/placed features and biome integration approach for 1.20.1)
+- [x] 3.1 Design and implement baseline worldgen definitions for ore placement (configured/placed features and biome integration approach for 1.20.1)
   - **Depends on:** 2.2
-  - **Outcome:** Nether ore generation wired for approved variants with default parameters
-  - **Verify:** Build passes; JSON/data/code structures load without registry errors
+  - **Outcome:** Nether ore generation wired for approved variants with default parameters (configured/placed features + Forge biome modifiers for `#minecraft:is_nether`)
+  - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17; in-game runtime validation pending (3.2)
 - [ ] 3.2 Validate in-game Nether generation behavior (dev world)
   - **Depends on:** 3.1
   - **Outcome:** Ore blocks generate in Nether under expected conditions
