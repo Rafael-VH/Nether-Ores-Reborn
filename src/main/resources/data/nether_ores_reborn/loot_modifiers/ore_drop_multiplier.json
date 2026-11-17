@@ -1,0 +1,26 @@
+{
+  "type": "nether_ores_reborn:ore_drop_multiplier",
+  "conditions": [
+    {
+      "condition": "minecraft:any_of",
+      "terms": [
+        {
+          "condition": "forge:loot_table_id",
+          "loot_table_id": "nether_ores_reborn:blocks/basalt_coal_ore"
+        },
+        {
+          "condition": "forge:loot_table_id",
+          "loot_table_id": "nether_ores_reborn:blocks/basalt_diamond_ore"
+        },
+        {
+          "condition": "forge:loot_table_id",
+          "loot_table_id": "nether_ores_reborn:blocks/blackstone_iron_ore"
+        },
+        {
+          "condition": "forge:loot_table_id",
+          "loot_table_id": "nether_ores_reborn:blocks/netherrack_iron_ore"
+        }
+      ]
+    }
+  ]
+}
