@@ -85,10 +85,10 @@
   - **Depends on:** 2.2, 0.3
   - **Outcome:** Complete original visual/resource set for baseline ores (temporary original placeholders generated)
   - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17; dev client visual verification pending
-- [ ] 6.2 Add localization files (`en_us.json`, `es_es.json`) with original naming
+- [x] 6.2 Add localization files (`en_us.json`, `es_es.json`) with original naming
   - **Depends on:** 2.2
   - **Outcome:** Block/item names localized in English and Spanish
-  - **Verify:** In-game names render correctly in both locales (or keys validated)
+  - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17; lang keys added for 4 blocks and creative tab (in-game locale rendering pending)
 
 ## Phase 7 — Verification, Polish, and Port-Readiness
 
