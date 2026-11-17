@@ -66,10 +66,10 @@
 
 ## Phase 5 — Configuration (`nether-ores-reborn.toml`)
 
-- [ ] 5.1 Implement config schema and defaults (toggles, spawn params, drop multipliers)
+- [x] 5.1 Implement config schema and defaults (toggles, spawn params, drop multipliers)
   - **Depends on:** 1.2
-  - **Outcome:** Config spec loads and generates/defaults are available
-  - **Verify:** Build passes; config file behavior validated in run environment
+  - **Outcome:** Config spec loads and generates/defaults are available (`config/nether-ores-reborn.toml` via COMMON config)
+  - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17; runtime config file generation/load to be validated in run environment
 - [ ] 5.2 Wire config values into worldgen and drop behavior (as designed)
   - **Depends on:** 3.1, 4.1, 5.1
   - **Outcome:** Enabled flags/ranges/frequencies/multipliers affect runtime behavior according to spec
