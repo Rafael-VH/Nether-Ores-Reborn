@@ -1,0 +1,23 @@
+schema: spec-driven
+
+context: |
+  Project: Nether Ores Reborn (clean-room reimplementation inspired conceptually by abandoned "Nether Ores Plus+")
+  Baseline: Minecraft 1.20.1, Forge 47.4.28, Java 17, ForgeGradle (MDK-based)
+  Upgrade plan: progressively port to newer Minecraft/loader versions after 1.20.1 baseline is stable
+  Core goals: add Nether ore variants for Netherrack, Basalt, and Blackstone with configurable generation/loot and original assets
+  Constraints: NO copied code/assets/names from original mod; /reference/ and /recursos/ remain local (gitignored)
+  Source of truth: AGENTS.md
+
+rules:
+  proposal:
+    - Include motivation, scope boundaries, risks, and rollback considerations
+    - Keep legal/clean-room constraints explicit
+  specs:
+    - Use concrete scenarios and testable requirements
+    - Capture configuration and data-driven behavior expectations
+  design:
+    - Document architecture decisions and version-portability considerations
+    - Note Forge 1.20.1 implementation choices and future porting seams
+  tasks:
+    - Break work into reviewable, verifiable units with dependencies
+    - Include build/verification checkpoints per phase

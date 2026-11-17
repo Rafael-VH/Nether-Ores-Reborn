@@ -1,0 +1,23 @@
+
+# Recursos / referencias locales
+/reference/
+/recursos/
+recursos/
+
+# Obsidian
+.obsidian/
+
+# CommandCode CLI local config
+.commandcode/
+
+# Local AI runtime state
+.atl/
+
+# FreeBuff CLI local config
+.freebuff/
+
+# PlayWright CLI
+.playwright-cli/
+
+# Antigravity CLI local config
+.antigravitycli/
