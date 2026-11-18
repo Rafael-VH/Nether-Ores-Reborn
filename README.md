@@ -33,7 +33,7 @@ Desde ahí podrás ajustar opciones generales y por mena (por ejemplo, activar/d
 ## Estado y notas
 
 - Este es un **baseline inicial** enfocado en compatibilidad con 1.20.1.
-- Las texturas actuales son **placeholders originales temporales** (se pueden mejorar en futuras versiones).
+- Las texturas del mod son originales y pueden seguir recibiendo ajustes visuales en futuras versiones.
 - Algunas comprobaciones manuales en juego (generación visual, drops en partidas, pruebas cliente/servidor) siguen pendientes.
 
 ## Licencia y créditos

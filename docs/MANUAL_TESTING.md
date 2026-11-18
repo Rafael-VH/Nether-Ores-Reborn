@@ -46,8 +46,8 @@ Validar con herramienta apropiada y comparar con/sin encantamientos según corre
 - [ ] `basalt_diamond_ore` suelta **Diamond** (sin Silk Touch)
 - [ ] `blackstone_iron_ore` suelta **Raw Iron** (sin Silk Touch)
 - [ ] `netherrack_iron_ore` suelta **Raw Iron** (sin Silk Touch)
-- [ ] **Silk Touch** devuelve el bloque de mena correspondiente
-- [ ] **Fortune** afecta los drops de forma esperada (al menos verificación básica)
+- [ ] **Silk Touch** devuelve el bloque de mena correspondiente (sin multiplicación del bloque por `dropMultiplier`)
+- [ ] **Fortune** afecta los drops de recursos de forma esperada (al menos verificación básica)
 - [ ] Los drops se comportan correctamente al explotar/minar (sin pérdidas anómalas evidentes)
 
 ## Configuración y comportamiento runtime (5.1 / 5.2)
@@ -58,13 +58,15 @@ Validar con herramienta apropiada y comparar con/sin encantamientos según corre
 - [ ] `ores.<id>.enabled=false` desactiva la generación de una mena específica
 - [ ] `ores.<id>.veinsPerChunk` modifica la frecuencia de generación (validación básica)
 - [ ] `ores.<id>.minY` / `maxY` modifican el rango de altura (validación básica)
-- [ ] `general.dropMultiplier` modifica la cantidad de drops (validación básica)
-- [ ] `ores.<id>.dropMultiplier` modifica la cantidad de drops para una mena específica (validación básica)
+- [ ] `general.dropMultiplier` modifica la cantidad de drops de recursos (validación básica)
+- [ ] `ores.<id>.dropMultiplier` modifica la cantidad de drops de recursos para una mena específica (validación básica)
+- [ ] `dropMultiplier` con valores `< 1` reduce drops de recursos según lo esperado (comportamiento probabilístico/fraccional)
+- [ ] `dropMultiplier` no multiplica el bloque obtenido con **Silk Touch**
 
 ## Limitaciones conocidas a tener en cuenta
 
 - [ ] `veinSize` existe en config pero **no se aplica** todavía a la generación (tamaño de veta estático en `configured_feature`)
-- [ ] Las texturas actuales son **placeholders originales temporales**
+- [ ] Las texturas del mod se ven correctamente y sin artefactos visibles inesperados
 
 ## Resultado de la prueba
 

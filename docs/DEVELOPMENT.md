@@ -20,7 +20,7 @@ Este documento reúne información técnica para desarrollo y mantenimiento del 
 - Loot tables por bloque
 - Configuración COMMON (`nether-ores-reborn.toml`)
 - Global Loot Modifier para multiplicadores de drops
-- Assets originales placeholder (texturas/modelos/blockstates) y localización `en_us` / `es_es`
+- Assets originales (texturas/modelos/blockstates) y localización `en_us` / `es_es`
 
 ## Matriz aprobada (baseline)
 
@@ -56,9 +56,11 @@ $env:Path="$env:JAVA_HOME\bin;$env:Path"
 - Archivo generado/usado: `config/nether-ores-reborn.toml`
 - Documentación de claves y defaults: [`CONFIG.md`](CONFIG.md)
 
-### Limitación conocida (config/worldgen)
+### Estado y limitaciones (config/worldgen)
 
+- Los `placed_feature` usan modifiers custom para aplicar configuración de generación (`enableGeneration`, `enabled`, `veinsPerChunk`, `minY`, `maxY`).
 - `veinSize` existe en la configuración, pero **aún no se aplica** a la generación porque el tamaño de veta sigue definido estáticamente en `data/nether_ores_reborn/worldgen/configured_feature/*.json`.
+- Los multiplicadores de drops se aplican vía Global Loot Modifier (`general.dropMultiplier` y `ores.<id>.dropMultiplier`) sobre drops de recursos (no sobre el bloque obtenido con Silk Touch).
 
 ## Documentación técnica relacionada
 
