@@ -2,15 +2,23 @@
   "feature": "nether_ores_reborn:basalt_coal_ore",
   "placement": [
     {
-      "type": "nether_ores_reborn:config_count",
-      "ore": "basalt_coal_ore"
+      "type": "minecraft:count",
+      "count": 20
     },
     {
       "type": "minecraft:in_square"
     },
     {
-      "type": "nether_ores_reborn:config_uniform_height_range",
-      "ore": "basalt_coal_ore"
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": {
+          "absolute": 5
+        },
+        "max_inclusive": {
+          "absolute": 120
+        }
+      }
     },
     {
       "type": "minecraft:biome"
