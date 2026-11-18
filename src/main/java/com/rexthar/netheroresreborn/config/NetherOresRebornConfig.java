@@ -31,10 +31,10 @@ public final class NetherOresRebornConfig {
         builder.pop();
 
         builder.comment("Per-ore settings (approved baseline matrix)").push("ores");
-        BASALT_COAL_ORE = new OreSettings(builder, "basalt_coal_ore", true, 8, 12, 5, 118, 1.0D);
-        BASALT_DIAMOND_ORE = new OreSettings(builder, "basalt_diamond_ore", true, 2, 6, 5, 118, 1.0D);
-        BLACKSTONE_IRON_ORE = new OreSettings(builder, "blackstone_iron_ore", true, 6, 10, 5, 118, 1.0D);
-        NETHERRACK_IRON_ORE = new OreSettings(builder, "netherrack_iron_ore", true, 6, 10, 5, 118, 1.0D);
+        BASALT_COAL_ORE = new OreSettings(builder, "basalt_coal_ore", true, 24, 12, 5, 118, 1.0D);
+        BASALT_DIAMOND_ORE = new OreSettings(builder, "basalt_diamond_ore", true, 8, 6, 5, 118, 1.0D);
+        BLACKSTONE_IRON_ORE = new OreSettings(builder, "blackstone_iron_ore", true, 16, 10, 5, 118, 1.0D);
+        NETHERRACK_IRON_ORE = new OreSettings(builder, "netherrack_iron_ore", true, 24, 10, 5, 118, 1.0D);
         builder.pop();
 
         SPEC = builder.build();

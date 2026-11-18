@@ -2,23 +2,15 @@
   "feature": "nether_ores_reborn:blackstone_iron_ore",
   "placement": [
     {
-      "type": "minecraft:count",
-      "count": 16
+      "type": "nether_ores_reborn:config_count",
+      "ore": "blackstone_iron_ore"
     },
     {
       "type": "minecraft:in_square"
     },
     {
-      "type": "minecraft:height_range",
-      "height": {
-        "type": "minecraft:uniform",
-        "min_inclusive": {
-          "absolute": 5
-        },
-        "max_inclusive": {
-          "absolute": 120
-        }
-      }
+      "type": "nether_ores_reborn:config_uniform_height_range",
+      "ore": "blackstone_iron_ore"
     },
     {
       "type": "minecraft:biome"

@@ -22,12 +22,13 @@ Baseline: **Minecraft 1.20.1 + Forge 47.4.28 (Java 17, ForgeGradle, official map
 - Watch for renamed/moved classes (placement modifiers, loot modifiers, registry APIs).
 
 ### 3. Worldgen pipeline
-- Current implementation mixes data files and custom placement modifiers:
-  - Config-aware: `enableGeneration`, per-ore `enabled`, `veinsPerChunk`, `minY`, `maxY`
-  - **Static/limitation:** `veinSize` is still defined in `configured_feature` JSON and not yet driven by config
+- Current implementation is data-driven with custom placement modifiers for config-aware generation controls:
+  - `placed_feature` JSON uses `nether_ores_reborn:config_count` and `nether_ores_reborn:config_uniform_height_range` (wired to config toggles/count/height range)
+  - `configured_feature` JSON currently defines static vein sizes
+  - **Static/limitation:** `veinSize` remains defined in `configured_feature` JSON and not yet driven by config
 - When porting, decide whether to:
   - keep data-driven worldgen + custom modifiers/codecs, or
-  - move configured/placed feature definitions to code/datagen for full config/dynamic control
+  - move configured/placed feature definitions to code/datagen for full config/dynamic control (including `veinSize`)
 
 ### 4. Loot and drops
 - Drop multipliers are implemented via **Global Loot Modifier** (Forge-specific).
