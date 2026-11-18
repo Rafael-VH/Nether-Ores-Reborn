@@ -11,7 +11,7 @@ This document reflects the baseline implementation for **Minecraft 1.20.1 / Forg
 | Key | Type | Default | Range / Notes | Current behavior |
 | --- | --- | --- | --- | --- |
 | `enableGeneration` | boolean | `true` | Master switch for ore generation | Applied to worldgen via custom placement modifiers (disables mod ore placement when `false`) |
-| `dropMultiplier` | double | `1.0` | `0.0` to `100.0` | Applied via Global Loot Modifier (global multiplier) |
+| `dropMultiplier` | double | `1.0` | `0.0` to `100.0` | Applied via Global Loot Modifier (global multiplier). `0` disables resource drops from affected ore loot; values between `0` and `1` scale down resource drops probabilistically; values above `1` scale up resource drops. Silk Touch/self-drops of the ore block are not multiplied. |
 
 ## `[ores.<ore_id>]`
 
@@ -29,7 +29,7 @@ Approved baseline ore IDs:
 | `veinSize` | int | `basalt_coal_ore=12`, `basalt_diamond_ore=6`, `blackstone_iron_ore=10`, `netherrack_iron_ore=10` | `0` to `64` | **Configured in schema but not yet applied to generation** (configured features currently use static JSON sizes) |
 | `minY` | int | `5` (all) | `-64` to `320` | Applied to worldgen via `nether_ores_reborn:config_uniform_height_range` in `placed_feature` JSON |
 | `maxY` | int | `118` (all) | `-64` to `320` | Applied to worldgen via `nether_ores_reborn:config_uniform_height_range` in `placed_feature` JSON |
-| `dropMultiplier` | double | `1.0` (all) | `0.0` to `100.0` | Applied via Global Loot Modifier (combined with global multiplier) |
+| `dropMultiplier` | double | `1.0` (all) | `0.0` to `100.0` | Applied via Global Loot Modifier (combined with global multiplier). Affects resource drops only; Silk Touch/self-drops of the ore block are not multiplied. |
 
 ## Notes and current limitations
 

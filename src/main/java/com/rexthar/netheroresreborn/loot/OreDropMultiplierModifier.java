@@ -37,34 +37,60 @@ public class OreDropMultiplierModifier extends LootModifier {
         }
 
         double multiplier = resolveMultiplier(state.getBlock());
-        if (multiplier <= 1.0D) {
-            if (multiplier <= 0.0D) {
-                generatedLoot.clear();
-            }
+        if (multiplier == 1.0D) {
+            return generatedLoot;
+        }
+        if (multiplier <= 0.0D) {
+            generatedLoot.clear();
             return generatedLoot;
         }
 
-        // Multiply stack counts (simple baseline behavior); cap to max stack sizes per stack entry.
-        ObjectArrayList<ItemStack> multiplied = new ObjectArrayList<>(generatedLoot.size());
+        ObjectArrayList<ItemStack> scaledLoot = new ObjectArrayList<>(generatedLoot.size());
         for (ItemStack stack : generatedLoot) {
             if (stack.isEmpty()) {
                 continue;
             }
-            ItemStack copy = stack.copy();
-            long scaled = Math.round(copy.getCount() * multiplier);
-            if (scaled <= 0L) {
+
+            // Do not multiply Silk Touch/self-drop of the ore block item.
+            if (stack.is(state.getBlock().asItem())) {
+                scaledLoot.add(stack);
                 continue;
             }
-            int max = copy.getMaxStackSize();
-            while (scaled > 0L) {
-                int take = (int) Math.min(scaled, max);
-                ItemStack part = copy.copy();
-                part.setCount(take);
-                multiplied.add(part);
-                scaled -= take;
+
+            int targetCount = scaleCount(stack.getCount(), multiplier, context);
+            if (targetCount <= 0) {
+                continue;
             }
+
+            addSplitStacks(scaledLoot, stack, targetCount);
         }
-        return multiplied;
+        return scaledLoot;
+    }
+
+    private static int scaleCount(int baseCount, double multiplier, LootContext context) {
+        double scaled = baseCount * multiplier;
+        if (scaled <= 0.0D) {
+            return 0;
+        }
+
+        int whole = (int) Math.floor(scaled);
+        double fractional = scaled - whole;
+        if (fractional > 0.0D && context.getRandom().nextDouble() < fractional) {
+            whole++;
+        }
+        return Math.max(0, whole);
+    }
+
+    private static void addSplitStacks(ObjectArrayList<ItemStack> output, ItemStack source, int totalCount) {
+        int maxStackSize = Math.max(1, source.getMaxStackSize());
+        int remaining = totalCount;
+        while (remaining > 0) {
+            int take = Math.min(remaining, maxStackSize);
+            ItemStack part = source.copy();
+            part.setCount(take);
+            output.add(part);
+            remaining -= take;
+        }
     }
 
     private static double resolveMultiplier(Block block) {
