@@ -167,7 +167,7 @@ tasks.named('processResources', ProcessResources).configure {
 
 // Example for how to get properties into the manifest for reading at runtime.
 tasks.named('jar', Jar).configure {
-    archiveFileName = "nether_ores_reborn-v0.1.1-1.20.1-beta.jar"
+    archiveFileName = "nether_ores_reborn-v0.1.2-1.20.1-beta.jar"
 
     manifest {
         attributes([
