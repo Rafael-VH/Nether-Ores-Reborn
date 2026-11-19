@@ -4,7 +4,7 @@ Nether Ores Reborn uses a Forge **COMMON** config file generated at:
 
 - `config/nether-ores-reborn.toml`
 
-This document reflects the baseline implementation for **Minecraft 1.20.1 / Forge 47.4.28**.
+This document reflects the current implementation for **Minecraft 1.20.1 / Forge 47.4.28** (mod version `0.1.2-beta`).
 
 ## `[general]`
 
@@ -31,11 +31,30 @@ Approved baseline ore IDs:
 | `maxY` | int | `118` (all) | `-64` to `320` | Applied to worldgen via `nether_ores_reborn:config_uniform_height_range` in `placed_feature` JSON |
 | `dropMultiplier` | double | `1.0` (all) | `0.0` to `100.0` | Applied via Global Loot Modifier (combined with global multiplier). Affects resource drops only; Silk Touch/self-drops of the ore block are not multiplied. |
 
+## Generation wiring
+
+- Each ore is defined as a `configured_feature` (`minecraft:ore` with a `minecraft:block_match` target) plus a `placed_feature` using `nether_ores_reborn:config_count` and `nether_ores_reborn:config_uniform_height_range`, so `enableGeneration`, `enabled`, `veinsPerChunk`, `minY` and `maxY` are read at world generation time.
+- Biome integration uses `forge:add_features` biome modifiers (`biome_modifier/*.json`) targeting `#minecraft:is_nether`.
+- **Generation step:** the biome modifiers inject at `underground_decoration`, the same step vanilla uses for its Nether ores (`ore_quartz_nether`, `ore_gold_nether`, `ore_blackstone`). This is required because `basalt_blobs`, `blackstone_blobs` and `ore_blackstone` are generated in that same step; running earlier would attempt to replace basalt/blackstone that does not exist yet.
+- Forge appends biome modifier features after the vanilla features of the same step, so the ores run after the blobs that create their target blocks.
+
+## Where each ore can appear
+
+Each ore replaces an existing base block, so its availability depends on the terrain:
+
+| Ore | Availability |
+| --- | --- |
+| `basalt_coal_ore` | Basalt Deltas only (the only Nether biome that generates basalt) |
+| `basalt_diamond_ore` | Basalt Deltas only |
+| `blackstone_iron_ore` | Basalt Deltas (full height, from `blackstone_blobs`) and every other Nether biome between Y 5 and 31 (from vanilla `ore_blackstone`) |
+| `netherrack_iron_ore` | All Nether biomes |
+
 ## Notes and current limitations
 
-- **Runtime validation pending:** config file generation/loading and in-game effects (generation/drops) still need validation in a dev client/world run.
-- **Generation wiring (Phase 1):** `placed_feature` JSON files now use custom placement modifiers for config-aware generation toggles, count, and height range. `configured_feature` vein sizes remain static in JSON.
 - **`veinSize` limitation:** the config key/default exists, but the ore size used by generation is still defined statically in `data/nether_ores_reborn/worldgen/configured_feature/*.json`.
+- **Existing worlds:** config changes only affect chunks that have not been generated yet. Exploring new chunks or creating a new world is required to observe differences.
+- **Upgrading from an older version:** an existing `nether-ores-reborn.toml` keeps its previous values and overrides new defaults. Delete the file to regenerate defaults or adjust the values manually.
+- **Density expectations:** `veinsPerChunk` is the number of placement attempts, not the number of vein blocks. The effective amount of ore also depends on how much of the target block exists at that height in that biome.
 
 ## Related implementation files
 
@@ -44,4 +63,5 @@ Approved baseline ore IDs:
 - `src/main/java/com/rexthar/netheroresreborn/worldgen/placement/ConfigUniformHeightRangePlacement.java`
 - `src/main/java/com/rexthar/netheroresreborn/loot/OreDropMultiplierModifier.java`
 - `src/main/resources/data/nether_ores_reborn/worldgen/`
+- `src/main/resources/data/nether_ores_reborn/forge/biome_modifier/`
 - `src/main/resources/data/nether_ores_reborn/loot_modifiers/`

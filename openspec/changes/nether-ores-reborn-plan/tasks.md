@@ -49,9 +49,13 @@
   - **Outcome:** Nether ore generation wired for approved variants with default parameters (configured/placed features + Forge biome modifiers for `#minecraft:is_nether`)
   - **Verify:** `.\gradlew.bat build` **BUILD SUCCESSFUL** with JDK 17 on 2026-11-17; in-game runtime validation pending (3.2)
 - [ ] 3.2 Validate in-game Nether generation behavior (dev world)
-  - **Depends on:** 3.1
+  - **Depends on:** 3.1, 3.3
   - **Outcome:** Ore blocks generate in Nether under expected conditions
-  - **Verify:** Client run + test world checks (exploration/logs/commands) confirm generation
+  - **Verify:** Client run + **newly generated chunks** confirm: basalt ores in Basalt Deltas; `blackstone_iron_ore` in every Nether biome between Y 5–31 and full-height in Basalt Deltas; `netherrack_iron_ore` in all Nether biomes. Delete any pre-existing `nether-ores-reborn.toml` first so stale values do not override new defaults.
+- [x] 3.3 Fix generation step ordering so basalt/blackstone targets exist before ores are placed
+  - **Depends on:** 3.1
+  - **Outcome:** Biome modifiers inject ores at `underground_decoration` instead of `underground_ores`. Previously only `netherrack_iron_ore` generated, because `basalt_blobs`, `blackstone_blobs` and `ore_blackstone` are created later than the `underground_ores` step.
+  - **Verify:** `GenerationStep$Decoration` order read from the mapped Forge jar (`UNDERGROUND_ORES` = index 6, `UNDERGROUND_DECORATION` = index 7); vanilla `basalt_deltas.json` and `nether_wastes.json` show `basalt_blobs`/`blackstone_blobs`/`ore_blackstone` at index 7; Forge appends biome modifier features after vanilla ones in the same step (`List.add`). `.\gradlew.bat clean build` **BUILD SUCCESSFUL** with JDK 17; fixed step verified inside `build/libs/nether_ores_reborn-v0.1.2-1.20.1-beta.jar`. Released as `v0.1.2-beta` (2026-11-18).
 
 ## Phase 4 — Loot Tables and Drops
 

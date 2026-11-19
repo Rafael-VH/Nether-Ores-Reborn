@@ -78,12 +78,23 @@ El mod debe implementar las siguientes funcionalidades, **reinterpretadas de for
 - Mena de **Netherrack** (base: netherrack)
 - Mena de **Basalt** (base: basalt)
 - Mena de **Blackstone** (base: blackstone)
-- [Añadir las variantes que el agente considere apropiadas según el análisis del original]
+
+**Matriz aprobada (no ampliar sin aprobación explícita del usuario):**
+
+| ID de bloque | Base | Drop base |
+| :--- | :--- | :--- |
+| `netherrack_iron_ore` | Netherrack | Raw Iron |
+| `blackstone_iron_ore` | Blackstone | Raw Iron |
+| `basalt_coal_ore` | Basalt | Coal |
+| `basalt_diamond_ore` | Basalt | Diamond |
+
+Variantes descartadas en el baseline: esmeralda, lapis, redstone y oro.
 
 ### 5.2 Comportamiento
 - Cada variante debe generar drops con una **tabla de loot configurable**.
 - Las menas deben spawnear en el bioma del Nether correspondiente durante la generación del mundo.
 - Los drops deben poder consultarse vía **datapack JSON** (loot tables estándar de Minecraft).
+- **Contrato de orden de generación (crítico):** las menas se inyectan en el step `underground_decoration`, no en `underground_ores`. Un `minecraft:ore` solo puede reemplazar bloques que ya existen cuando corre su fase, y el basalto (`basalt_blobs`) y el blackstone (`blackstone_blobs`, `ore_blackstone`) se generan en `underground_decoration`. Meter las menas antes hace que las variantes de basalto y blackstone no aparezcan, **sin ningún error visible**. Ver `docs/DEVELOPMENT.md` y `docs/PORTING_NOTES.md`.
 
 ### 5.3 Configuración
 - Archivo `config/nether-ores-reborn.toml` con:
@@ -131,28 +142,29 @@ El mod debe implementar las siguientes funcionalidades, **reinterpretadas de for
    ```
 4. Definir valores base del mod (mod id, paquete, nombre visible, versión) antes de registrar contenido.
 
-### Fase 2 — Registro de bloques (Fabric o NeoForge)
+### Fase 2 — Registro de bloques (Forge 47.4.28)
 1. Crear clase `NetherOresReborn` (clase principal).
-2. Registrar las 3 (o más) variantes de mena con sus `Block` y `BlockItem`.
+2. Registrar las 4 variantes de mena aprobadas con sus `Block` y `BlockItem`.
 3. Añadir los bloques a los creative tabs correspondientes.
 4. Compilar (`./gradlew build`) y verificar en un mundo de prueba.
 
 ### Fase 3 — Generación de mundo
-1. Añadir las menas al **worldgen** del Nether mediante:
-   - Fabric: `BiomeModifications` o datapack-based features.
-   - NeoForge: `BiomeModifier` o JSON worldgen.
-2. Configurar `ConfiguredFeature`, `PlacedFeature` y `BiomeModifier` (o equivalentes).
-3. Verificar en mundo de prueba con `/locate` o generando chunks.
+1. Añadir las menas al **worldgen** del Nether mediante el pipeline data-driven de Forge:
+   - `data/nether_ores_reborn/worldgen/configured_feature/*.json` (tipo `minecraft:ore` con `block_match`).
+   - `data/nether_ores_reborn/worldgen/placed_feature/*.json` (count, altura, bioma).
+   - `data/nether_ores_reborn/forge/biome_modifier/*.json` con `forge:add_features` sobre `#minecraft:is_nether`.
+2. Usar el step **`underground_decoration`** (ver 5.2). Verificar el orden real de `GenerationStep.Decoration` en la versión objetivo antes de cambiarlo.
+3. Verificar en mundo de prueba con `/locate biome` y generando chunks nuevos (los chunks existentes no se regeneran).
 
 ### Fase 4 — Loot tables
-1. Crear las loot tables JSON en `data/nether-ores-reborn/loot_tables/blocks/`.
+1. Crear las loot tables JSON en `data/nether_ores_reborn/loot_tables/blocks/`.
 2. Cada tabla debe replicar la **funcionalidad** (drops con probabilidades) sin copiar la estructura exacta del original.
 3. Probar drops con `/loot give` o `LootContext`.
 
 ### Fase 5 — Configuración
-1. Implementar `ModConfig` (Fabric: Cloth Config / NeoForge: `ModConfigSpec`).
-2. Cargar los valores desde `nether-ores-reborn.toml`.
-3. Aplicar los valores en la generación de mundo y en las loot tables (si es dinámico).
+1. Implementar `ModConfig` con `ModConfigSpec` (config COMMON de Forge).
+2. Cargar los valores desde `config/nether-ores-reborn.toml`.
+3. Aplicar los valores en la generación de mundo y en los drops. Ojo: `veinSize` sigue sin aplicarse (el tamaño de vena vive estático en `configured_feature`).
 
 ### Fase 6 — Assets originales
 1. Crear texturas propias 16x16 para cada mena (puede usar Aseprite, GIMP o Krita).
@@ -184,39 +196,50 @@ El mod debe implementar las siguientes funcionalidades, **reinterpretadas de for
 - Prefijo de registro: `nether_ores_reborn:` (nunca reutilizar `nether_ores_plus`).
 
 ### Estilo
-- Seguir las convenciones de Java 25 (records, sealed classes, pattern matching, etc.).
+- Seguir las convenciones de **Java 17** (el baseline): records, sealed classes, pattern matching para `instanceof` y switch expressions están disponibles y se usan cuando aportan claridad.
 - Usar `@Override` explícito.
 - Documentar todas las clases públicas con Javadoc.
 - No dejar código comentado sin justificación.
 - No dejar TODOs sin contexto.
 
-### Estructura de carpetas sugerida
+### Estructura de carpetas (estado actual)
+
 ```
 src/main/java/com/rexthar/netheroresreborn/
-├── NetherOresReborn.java          # Clase principal
+├── NetherOresReborn.java
+├── config/
+│   └── NetherOresRebornConfig.java
+├── loot/
+│   ├── ModLootModifiers.java
+│   └── OreDropMultiplierModifier.java
 ├── registry/
 │   ├── ModBlocks.java
 │   ├── ModItems.java
 │   └── ModCreativeTabs.java
-├── worldgen/
-│   ├── ModConfiguredFeatures.java
-│   ├── ModPlacedFeatures.java
-│   └── ModBiomeModifications.java
-├── config/
-│   └── NetherOresRebornConfig.java
-└── util/
-    └── ModConstants.java
+├── util/
+│   └── ModConstants.java
+└── worldgen/placement/
+    ├── ConfigCountPlacement.java
+    ├── ConfigUniformHeightRangePlacement.java
+    └── ModPlacementModifiers.java
 
 src/main/resources/
-├── assets/nether-ores-reborn/
+├── assets/nether_ores_reborn/          # namespace con guiones bajos, NO guiones
 │   ├── blockstates/
 │   ├── models/
 │   ├── textures/
 │   └── lang/
-├── data/nether-ores-reborn/
+├── data/nether_ores_reborn/
+│   ├── forge/biome_modifier/           # forge:add_features (step: underground_decoration)
+│   ├── loot_modifiers/
 │   ├── loot_tables/
 │   └── worldgen/
-└── fabric.mod.json (o META-INF/neoforge.mods.toml)
+│       ├── configured_feature/
+│       └── placed_feature/
+└── META-INF/mods.toml
+```
+
+El worldgen del baseline es **data-driven**: no hay clases `ModConfiguredFeatures` / `ModPlacedFeatures` / `ModBiomeModifications`; solo existen placement modifiers custom en `worldgen/placement/`.
 
 ---
 
@@ -260,10 +283,13 @@ src/main/resources/
 - ⚠️ **No inventar funcionalidad** que no exista en el mod original sin consultar antes al usuario.
 - ⚠️ **No copiar la estructura de clases** del código descompilado al pie de la letra; reescribir con patrones modernos (records, builders, `DeferredRegister`/`Registry`).
 - ⚠️ **No omitir la compilación** después de cada fase. Un build roto debe resolverse antes de avanzar.
-- ⚠️ **No crear assets** sin antes confirmar que el usuario aprobó la lista de menas y sus atributos.
+- ⚠️ **No crear assets** sin antes confirmar que el usuario aprobó la lista de menas y sus atributos. Las texturas actuales son **definitivas**.
 - ⚠️ **No publicar** en ningún registro público (CurseForge, Modrinth, GitHub) sin autorización explícita del usuario.
 - ⚠️ **No eliminar** `/reference/` ni su contenido sin autorización; es material de consulta local.
-- ⚠️ **Verificar** en cada release que el `.jar` no incluya nada de `/reference/`.
+- ⚠️ **Verificar** en cada release que el `.jar` no incluya nada de `/reference/` ni `/recursos/`.
+- ⚠️ **No cambiar el `step` de generación** sin verificar antes el orden real de `GenerationStep.Decoration` en la versión objetivo y en qué step se generan los bloques base. Un step incorrecto **no produce ningún error**: las menas simplemente no aparecen. Ver 5.2 y `docs/DEVELOPMENT.md`.
+- ⚠️ **No confundir "probado en un mundo viejo" con "no genera"**. Las menas solo aparecen en chunks nuevos; los ya generados no se regeneran.
+- ⚠️ **No commitear ni pushear sin aprobación explícita del usuario.**
 
 ---
 
@@ -273,10 +299,14 @@ src/main/resources/
 | :--- | :--- | :--- |
 | 2026-11-17 | Fase 0 | Inicio del proyecto, análisis del original |
 | 2026-11-17 | Planificación | Cambio de baseline: se inicia en **Minecraft 1.20.1 + Forge 47.4.28** con plan de porteo progresivo a versiones superiores |
+| 2026-11-17 | Fases 1–4 | Bootstrap del MDK, registros de bloques/ítems, worldgen data-driven, loot tables, config COMMON y Global Loot Modifier |
+| 2026-11-18 | Release `v0.1.0-beta` | Primera versión publicada con los 4 bloques y generación en el Nether |
+| 2026-11-18 | Release `v0.1.1-beta` | Config cableada al worldgen (`config_count`, `config_uniform_height_range`), corrección de multiplicadores de drops y manejo de Silk Touch, limpieza de entrypoint, documentación |
+| 2026-11-18 | Release `v0.1.2-beta` | **Fix de generación:** biome modifiers movidos de `underground_ores` a `underground_decoration` (causa de que solo `netherrack_iron_ore` apareciera). Texturas definitivas. Auditoría completa y documentación actualizada |
 
 ---
 
-*Última actualización de este archivo: 2026-11-17 — Actualizar cada vez que cambie el alcance o el stack.*
+*Última actualización de este archivo: 2026-11-18 — Actualizar cada vez que cambie el alcance o el stack.*
 
 ---
 

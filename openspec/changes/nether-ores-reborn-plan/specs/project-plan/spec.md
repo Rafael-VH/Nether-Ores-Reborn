@@ -70,6 +70,17 @@ The plan MUST capture design considerations for later porting beyond 1.20.1 with
 - THEN the design MUST identify likely version-sensitive areas (worldgen APIs, config APIs, data formats, registries)
 - AND MUST recommend boundaries/seams to reduce rewrite cost in future ports
 
+### Requirement: Nether Ore Generation Step Ordering
+Ore generation MUST be injected in a generation step that runs after the vanilla features that create the ore's target block.
+
+#### Scenario: Basalt and blackstone ore availability
+- GIVEN `minecraft:ore` configured features can only replace blocks that already exist when their step runs
+- AND `basalt_blobs`, `blackstone_blobs` and `ore_blackstone` are generated at `underground_decoration` in 1.20.1
+- WHEN biome modifiers inject the mod's ores
+- THEN they MUST use `underground_decoration`
+- AND MUST NOT use `underground_ores`, which runs earlier and leaves basalt/blackstone targets absent
+- AND the step MUST be re-validated against the target version's `GenerationStep.Decoration` order when porting
+
 ## MODIFIED Requirements
 
 ### Requirement: (none)
