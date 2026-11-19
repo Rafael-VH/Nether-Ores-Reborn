@@ -1,6 +1,6 @@
 {
   "type": "forge:add_features",
-  "biomes": "#is_nether",
+  "biomes": "#minecraft:is_nether",
   "features": "nether_ores_reborn:basalt_diamond_ore",
-  "step": "underground_ores"
+  "step": "underground_decoration"
 }
