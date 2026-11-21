@@ -117,6 +117,20 @@ Variantes descartadas en el baseline: esmeralda, lapis, redstone y oro.
 - Los **commits** solo pueden realizarse con **aprobación explícita** del usuario; **nunca** de forma automática.
 - Los **push** al repositorio remoto solo pueden realizarse con **aprobación explícita** del usuario; **nunca** de forma automática.
 
+### Preferencias de sesión SDD (preflight)
+Definidas por el usuario el 2026-11-20. Se aplican por defecto en cada sesión SDD de este proyecto; no volver a preguntarlas salvo que el usuario pida cambiarlas explícitamente.
+
+| Grupo | Valor canónico | Significado |
+| :--- | :--- | :--- |
+| Ritmo | `interactive` | Mostrar cada fase y esperar confirmación antes de continuar |
+| Artefactos | `both` | Archivos OpenSpec en el repo + copia de recuperación en Engram |
+| PRs | `auto-forecast` | Decidir single vs encadenado a partir de la estimación de tamaño |
+| Revisión | `review_budget_lines: 800` | Frenar y consultar si la estimación supera 800 líneas cambiadas |
+
+- Artefactos OpenSpec: `openspec/changes/<change>/`
+- Artefactos Engram: `sdd/<change>/<fase>` (por ejemplo `sdd/<change>/tasks`)
+- Contexto del proyecto para SDD: `sdd-init/nether-ores-reborn`
+
 ### Fase 0 — Análisis del mod original (solo referencia local)
 1. Colocar el JAR original en `/reference/original.jar`.
 2. Usar REA: `inspect_java_archive` para obtener estructura general.
@@ -303,10 +317,11 @@ El worldgen del baseline es **data-driven**: no hay clases `ModConfiguredFeature
 | 2026-11-18 | Release `v0.1.0-beta` | Primera versión publicada con los 4 bloques y generación en el Nether |
 | 2026-11-18 | Release `v0.1.1-beta` | Config cableada al worldgen (`config_count`, `config_uniform_height_range`), corrección de multiplicadores de drops y manejo de Silk Touch, limpieza de entrypoint, documentación |
 | 2026-11-18 | Release `v0.1.2-beta` | **Fix de generación:** biome modifiers movidos de `underground_ores` a `underground_decoration` (causa de que solo `netherrack_iron_ore` apareciera). Texturas definitivas. Auditoría completa y documentación actualizada |
+| 2026-11-20 | Fix worldgen | `blackstone_iron_ore` pasa a 48 intentos por chunk y rango Y 5–32 (el blackstone vanilla fuera de Basalt Deltas solo existe en Y 5–31). Se registran las preferencias de sesión SDD |
 
 ---
 
-*Última actualización de este archivo: 2026-11-18 — Actualizar cada vez que cambie el alcance o el stack.*
+*Última actualización de este archivo: 2026-11-20 — Actualizar cada vez que cambie el alcance o el stack.*
 
 ---
 
