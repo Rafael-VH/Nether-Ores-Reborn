@@ -3,5 +3,14 @@
   "block.nether_ores_reborn.basalt_diamond_ore": "Basalt Diamond Ore",
   "block.nether_ores_reborn.blackstone_iron_ore": "Blackstone Iron Ore",
   "block.nether_ores_reborn.netherrack_iron_ore": "Netherrack Iron Ore",
-  "creativetab.nether_ores_reborn.main": "Nether Ores Reborn"
+  "creativetab.nether_ores_reborn.main": "Nether Ores Reborn",
+  "gui.nether_ores_reborn.title": "Nether Ores Reborn Settings",
+  "gui.nether_ores_reborn.page.general": "General",
+  "gui.nether_ores_reborn.general.enable_generation": "Enable generation",
+  "gui.nether_ores_reborn.general.drop_multiplier": "Drop multiplier",
+  "gui.nether_ores_reborn.reset_page": "Reset page",
+  "gui.nether_ores_reborn.error.spec_not_loaded": "Configuration is not loaded yet",
+  "gui.nether_ores_reborn.error.invalid_number": "Enter a number between 0 and 100",
+  "gui.nether_ores_reborn.error.out_of_range": "Value must be between 0 and 100",
+  "gui.nether_ores_reborn.error.save_failed": "Could not save the configuration"
 }

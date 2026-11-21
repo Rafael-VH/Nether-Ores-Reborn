@@ -113,20 +113,35 @@ Three small reusable widgets keep the screen readable:
 ## 5. Side isolation and registration
 
 ```java
-// client package only
-public final class ConfigScreenRegistration {
-    public static void register() {
-        ModLoadingContext.get().registerExtensionPoint(
-                ConfigScreenHandler.ConfigScreenFactory.class,
-                () -> new ConfigScreenHandler.ConfigScreenFactory(
-                        (minecraft, parent) -> new NetherOresConfigScreen(parent)));
-    }
+// ConfigScreenRegistration: no client types in this class file
+public static void register() {
+    ModLoadingContext.get().registerExtensionPoint(
+            ConfigScreenHandler.ConfigScreenFactory.class,
+            () -> new ConfigScreenHandler.ConfigScreenFactory(ConfigScreenFactory::create));
+}
+
+// ConfigScreenFactory: client-only, loaded only when Forge calls the extension point
+public static Screen create(Minecraft minecraft, Screen parent) {
+    return new NetherOresConfigScreen(parent);
 }
 ```
 
-Called from the mod constructor with `DistExecutor.safeRunWhenOn` (the *safe* variant, which defers
-class loading). `unsafeRunWhenOn`, a direct method reference, or a `@Mod.EventBusSubscriber` on a
-client class would make the dedicated server load `ConfigScreenHandler` and fail.
+Called from the mod constructor with `DistExecutor.safeRunWhenOn(Dist.CLIENT,
+() -> ConfigScreenRegistration::register)`.
+
+Two constraints were confirmed against Forge 47.4.28 by a real `runServer` boot:
+
+1. `validateSafeReferent` resolves the supplier on **both** sides. The registered method must be a
+   no-argument static method in a **different class** from the one that captures it. A nested lambda
+   or a bound method reference implemented in `NetherOresReborn` fails with "Unsafe Referent usage
+   found in safe referent method".
+2. The registration class itself must contain no client types. An inline `(minecraft, parent) -> ...`
+   lambda makes javac emit a synthetic method with `Screen` in its signature, which the runtime dist
+   cleaner rejects on a dedicated server. Moving that lambda to `ConfigScreenFactory` keeps
+   `ConfigScreenRegistration` server-loadable.
+
+`ModLoadingContext.get()` is deprecated in 47.4.28 but the safe-referent pattern requires a
+no-argument static method, so the deprecation is suppressed locally with an explanatory comment.
 
 ## 6. Warnings and i18n
 

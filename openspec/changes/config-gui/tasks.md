@@ -26,12 +26,17 @@ checks listed under them (there is no UI test harness in this project).
 
 ### 2. Screen shell, registration and General page
 
-- [ ] 2.1 Add `ConfigScreenRegistration` (client-only) and call it from the mod constructor with
-      `DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ConfigScreenRegistration::register)`
+- [ ] 2.1 Add `ConfigScreenRegistration` and `ConfigScreenFactory`, and call the former from the mod
+      constructor with `DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ConfigScreenRegistration::register)`
   - **Depends on:** 1.1
   - **Outcome:** Config button enabled in the Mods list for this mod only
   - **Verify:** `runClient`, select the mod, button enabled; select another mod, button disabled;
     `runServer` starts without `NoClassDefFoundError`
+  - **Observed:** `runServer` reached `Done (8.985s)!` with no `NoClassDefFoundError`, no
+    `BootstrapMethodError`, and no dist-cleaner rejection. Two earlier attempts failed and were
+    fixed: a capturing lambda in `NetherOresReborn` (unsafe referent) and an inline lambda with
+    `Screen` in its signature inside `ConfigScreenRegistration` (dist cleaner). `runClient` button
+    check is still pending manual confirmation.
 - [ ] 2.2 Add `NetherOresConfigScreen` with page enum, footer (`Prev`/`Next`/`Reset`/`Cancel`/`Done`),
       pending-edits map, and the General page (`enableGeneration`, `dropMultiplier` as a temporary
       text row)
