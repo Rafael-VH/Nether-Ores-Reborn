@@ -31,6 +31,18 @@ Approved baseline ore IDs:
 | `maxY` | int | `118` (all except `blackstone_iron_ore=32`) | `-64` to `320` | Applied to worldgen via `nether_ores_reborn:config_uniform_height_range` in `placed_feature` JSON |
 | `dropMultiplier` | double | `1.0` (all) | `0.0` to `100.0` | Applied via Global Loot Modifier (combined with global multiplier). Affects resource drops only; Silk Touch/self-drops of the ore block are not multiplied. |
 
+## In-game editing (Forge Mods list)
+
+The COMMON config can also be edited from the client through **Mods → Nether Ores Reborn → Config**. The screen has a General page plus one page per approved ore.
+
+- Controls display the effective value loaded from `config/nether-ores-reborn.toml`.
+- Edits stay pending until **Done**. **Cancel** discards every pending edit and leaves the file untouched.
+- **Reset page** puts that page's documented defaults into the pending set; press **Done** to persist them.
+- `veinsPerChunk` uses `[0, 64]`; `minY` and `maxY` use `[0, 127]`. A value loaded from the file outside a control's range is shown with an `(outside UI range)` marker and is not rewritten unless that specific control is moved.
+- `dropMultiplier` fields accept `[0.0, 100.0]` with up to two decimals. Invalid input is highlighted and blocks **Done** and page navigation.
+- `veinSize` is not rendered while it remains unused by world generation.
+- The screen always warns that changes affect only newly generated chunks. On a remote server it also warns that only the local client copy is edited; it does not change the server's config.
+
 ## Generation wiring
 
 - Each ore is defined as a `configured_feature` (`minecraft:ore` with a `minecraft:block_match` target) plus a `placed_feature` using `nether_ores_reborn:config_count` and `nether_ores_reborn:config_uniform_height_range`, so `enableGeneration`, `enabled`, `veinsPerChunk`, `minY` and `maxY` are read at world generation time.
@@ -60,6 +72,9 @@ Each ore replaces an existing base block, so its availability depends on the ter
 ## Related implementation files
 
 - `src/main/java/com/rexthar/netheroresreborn/config/NetherOresRebornConfig.java`
+- `src/main/java/com/rexthar/netheroresreborn/config/client/NetherOresConfigScreen.java`
+- `src/main/java/com/rexthar/netheroresreborn/config/client/widgets/DecimalField.java`
+- `src/main/java/com/rexthar/netheroresreborn/config/client/widgets/IntSlider.java`
 - `src/main/java/com/rexthar/netheroresreborn/worldgen/placement/ConfigCountPlacement.java`
 - `src/main/java/com/rexthar/netheroresreborn/worldgen/placement/ConfigUniformHeightRangePlacement.java`
 - `src/main/java/com/rexthar/netheroresreborn/loot/OreDropMultiplierModifier.java`

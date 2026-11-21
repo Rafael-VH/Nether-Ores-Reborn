@@ -96,12 +96,21 @@ checks listed under them (there is no UI test harness in this project).
 - [ ] 5.1 Add the new-chunks warning and the remote-server warning
   - **Depends on:** 3.2
   - **Verify:** singleplayer shows one warning; a remote connection shows both
+  - **Observed:** both warnings are rendered from translation keys; the remote one is gated on
+    `Minecraft#getCurrentServer() != null`, so singleplayer shows only the new-chunks warning.
+    `./gradlew build` green. The in-game visual check is listed in the manual checklist.
 - [ ] 5.2 Add `gui.nether_ores_reborn.*` keys to `en_us` and `es_es`; remove every hardcoded label
   - **Depends on:** 5.1
   - **Verify:** switch language in game; no untranslated key (`gui.…`) is displayed
-- [ ] 5.3 Update `docs/CONFIG.md` (in-game editing) and `docs/MANUAL_TESTING.md` (manual checklist)
+  - **Observed:** the navigation arrows now use translation keys. A scripted scan of all Java sources
+    found 21 referenced keys; all 20 static keys exist in both language files, and the four dynamic
+    `ores.<id>` keys also exist in both. The in-game language switch remains in the manual checklist.
+- [x] 5.3 Update `docs/CONFIG.md` (in-game editing) and `docs/MANUAL_TESTING.md` (manual checklist)
   - **Depends on:** 5.2
   - **Verify:** checklist covers button, pages, Done/Cancel/Reset, warnings, side isolation, build
+  - **Observed:** `docs/CONFIG.md` documents the Mods-list entry point, pending edits, Reset,
+    validation, out-of-domain markers, hidden `veinSize` and both warnings. `docs/MANUAL_TESTING.md`
+    has a dedicated config-GUI checklist covering those cases plus dedicated-server startup.
 
 ## Test-first policy
 

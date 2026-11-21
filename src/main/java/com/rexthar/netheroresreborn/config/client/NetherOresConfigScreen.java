@@ -37,6 +37,7 @@ public class NetherOresConfigScreen extends Screen {
     private static final int WIDGET_HEIGHT = 20;
     private static final int TEXT_COLOR = 0xA0A0A0;
     private static final int ERROR_COLOR = 0xFF5555;
+    private static final int WARNING_COLOR = 0xFFAA00;
 
     private static final int MAX_VEINS_PER_CHUNK = 64;
     private static final int UI_MIN_Y = 0;
@@ -71,13 +72,15 @@ public class NetherOresConfigScreen extends Screen {
 
     private void initPageNavigation(int left) {
         int navY = 30;
-        Button previous = Button.builder(Component.literal("<"), button -> changePage(-1))
+        Button previous = Button.builder(
+                Component.translatable("gui.nether_ores_reborn.previous_page"), button -> changePage(-1))
                 .bounds(left, navY, 24, WIDGET_HEIGHT)
                 .build();
         previous.active = ConfigPage.values().length > 1;
         addRenderableWidget(previous);
 
-        Button next = Button.builder(Component.literal(">"), button -> changePage(1))
+        Button next = Button.builder(
+                Component.translatable("gui.nether_ores_reborn.next_page"), button -> changePage(1))
                 .bounds(left + CONTENT_WIDTH - 24, navY, 24, WIDGET_HEIGHT)
                 .build();
         next.active = ConfigPage.values().length > 1;
@@ -167,6 +170,8 @@ public class NetherOresConfigScreen extends Screen {
             renderRowLabels(graphics);
         }
 
+        renderWarnings(graphics, centerX);
+
         if (this.error != null) {
             graphics.drawCenteredString(this.font, this.error, centerX, this.height - 48, ERROR_COLOR);
         }
@@ -194,6 +199,22 @@ public class NetherOresConfigScreen extends Screen {
             graphics.drawString(this.font,
                     Component.translatable("gui.nether_ores_reborn.ore.zero_veins_hint"),
                     labelX, FIRST_ROW_Y + 5 * ROW_HEIGHT + 2, TEXT_COLOR, false);
+        }
+    }
+
+    /**
+     * Shows the chunk warning on every page and adds a second warning when the client is connected to
+     * a remote server, where this screen only edits the local configuration copy.
+     */
+    private void renderWarnings(GuiGraphics graphics, int centerX) {
+        int y = this.height - 62;
+        graphics.drawCenteredString(this.font,
+                Component.translatable("gui.nether_ores_reborn.warning.new_chunks"),
+                centerX, y, WARNING_COLOR);
+        if (this.minecraft != null && this.minecraft.getCurrentServer() != null) {
+            graphics.drawCenteredString(this.font,
+                    Component.translatable("gui.nether_ores_reborn.warning.remote_server"),
+                    centerX, y - 14, WARNING_COLOR);
         }
     }
 

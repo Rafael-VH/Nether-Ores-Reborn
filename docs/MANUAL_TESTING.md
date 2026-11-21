@@ -86,6 +86,28 @@ Validar con herramienta apropiada y comparar con/sin encantamientos según corre
 - [ ] `dropMultiplier` no multiplica el bloque obtenido con **Silk Touch**
 - [ ] Un `.toml` viejo conserva sus valores y pisa los defaults nuevos (comportamiento esperado, documentado)
 
+## Interfaz de configuración en juego (config-gui)
+
+Abrir **Mods → Nether Ores Reborn → Config** y comprobar:
+
+- [ ] El botón **Config** está habilitado solo para este mod; al seleccionar otro mod no se abre esta pantalla
+- [ ] La pantalla se abre y **Done** / **Cancel** vuelven a la lista de mods
+- [ ] La página General muestra `enableGeneration` y `dropMultiplier` con los valores efectivos del `.toml`
+- [ ] Las cuatro páginas de mena muestran `enabled`, `veinsPerChunk`, `minY`, `maxY` y `dropMultiplier` con los valores del archivo, no los defaults
+- [ ] No aparece ningún control para `veinSize` en ninguna página
+- [ ] Cambiar un valor y pulsar **Done** actualiza `config/nether-ores-reborn.toml`; al reabrir se ve el valor guardado
+- [ ] Cambiar un valor y pulsar **Cancel** no modifica el archivo
+- [ ] **Reset page** seguido de **Done** persiste los defaults documentados de esa página
+- [ ] `dropMultiplier` acepta `0`, `50`, `100` y `50.55`; rechaza `abc`, `-1`, `100.1` y `50.555`
+- [ ] Un valor inválido resalta el campo y bloquea **Done** y el cambio de página
+- [ ] `veinsPerChunk = 0` muestra el aviso de que desactiva la generación de esa mena
+- [ ] Al dejar `minY` por encima de `maxY`, **Done** guarda un rango ordenado
+- [ ] Un valor fuera de rango escrito a mano en el `.toml` (por ejemplo `minY = -64`) se muestra con el marcador `(outside UI range)` y sigue en el archivo tras un **Done** posterior
+- [ ] En un mundo local se ve el aviso de que los cambios solo afectan a chunks nuevos
+- [ ] Conectado a un servidor remoto se ven además el aviso de que solo se edita la copia local de la configuración
+- [ ] Con `en_us` y `es_es` no se muestra ninguna clave `gui.…` sin traducir
+- [ ] Un servidor dedicado inicia sin errores con el mod instalado
+
 ## Limitaciones conocidas a tener en cuenta
 
 - [ ] `veinSize` existe en config pero **no se aplica** todavía a la generación (tamaño de vena estático en `configured_feature`: 12, 6, 10 y 10)
