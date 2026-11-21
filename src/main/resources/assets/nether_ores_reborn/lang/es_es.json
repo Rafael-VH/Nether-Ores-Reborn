@@ -12,5 +12,15 @@
   "gui.nether_ores_reborn.error.spec_not_loaded": "La configuración todavía no está cargada",
   "gui.nether_ores_reborn.error.invalid_number": "Introduce un número entre 0 y 100",
   "gui.nether_ores_reborn.error.out_of_range": "El valor debe estar entre 0 y 100",
-  "gui.nether_ores_reborn.error.save_failed": "No se pudo guardar la configuración"
+  "gui.nether_ores_reborn.error.save_failed": "No se pudo guardar la configuración",
+  "gui.nether_ores_reborn.ores.netherrack_iron_ore": "Mena de hierro en netherrack",
+  "gui.nether_ores_reborn.ores.blackstone_iron_ore": "Mena de hierro en piedra negra",
+  "gui.nether_ores_reborn.ores.basalt_coal_ore": "Mena de carbón en basalto",
+  "gui.nether_ores_reborn.ores.basalt_diamond_ore": "Mena de diamante en basalto",
+  "gui.nether_ores_reborn.ore.enabled": "Activada",
+  "gui.nether_ores_reborn.ore.veins_per_chunk": "Venas por chunk",
+  "gui.nether_ores_reborn.ore.min_y": "Y mínima",
+  "gui.nether_ores_reborn.ore.max_y": "Y máxima",
+  "gui.nether_ores_reborn.ore.zero_veins_hint": "0 intentos desactiva la generación de esta mena",
+  "gui.nether_ores_reborn.out_of_domain": "(!) %s (fuera del rango de la interfaz)"
 }

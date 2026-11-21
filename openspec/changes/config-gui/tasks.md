@@ -49,9 +49,11 @@ checks listed under them (there is no UI test harness in this project).
 
 ### 3. Per-ore pages and integer sliders
 
-- [ ] 3.1 Add `IntSlider` with centralized `toSlider`/`fromSlider` mapping and integer label
+- [x] 3.1 Add `IntSlider` with centralized `toSlider`/`fromSlider` mapping and integer label
   - **Depends on:** 2.2
   - **Verify:** slider endpoints produce exactly `0`/`64` and `0`/`127`; mid values round correctly
+  - **Observed:** `jshell` against the compiled classes returned `0,64` and `0,127` for the endpoints,
+    `32`/`64` for the midpoints, and exact round-tripping of `5`. Build green.
 - [ ] 3.2 Add the four ore pages with `enabled`, `veinsPerChunk`, `minY`, `maxY`
   - **Depends on:** 3.1
   - **Outcome:** each page loads the effective values from the spec; `minY > maxY` adjusts the other
@@ -59,6 +61,10 @@ checks listed under them (there is no UI test harness in this project).
     rendered
   - **Verify:** seed a `.toml` with non-default values, open every page and compare against the file;
     set an inverted range and confirm the saved file is ordered
+  - **Observed:** `./gradlew build` green. `heightRangeFix` verified in `jshell`: edited `minY` above
+    `maxY` raises `maxY` (`1`), edited `maxY` below `minY` lowers `minY` (`-1`), an ordered range and
+    an untouched inverted range make no change (`0`), and an untouched out-of-domain bound is not
+    rewritten. The seeded-`.toml` UI comparison is still pending the manual checklist in unit 5.
 
 ### 4. Decimal fields, Reset and out-of-domain handling
 
@@ -104,6 +110,7 @@ recorded here rather than silently skipped.
 | Decision needed before apply | No |
 | Delivery strategy | `auto-forecast` → single PR |
 | Review budget (session) | 800 lines |
+| Budget decision (2026-11-20) | Maintainer accepted `size:exception`; chained PRs explicitly rejected because the units are not independently usable |
 
 Each work unit is independently revertible; the branch accumulates 5 commits, none above 400 authored
 lines.

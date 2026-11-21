@@ -177,7 +177,9 @@ replaces the extension point with `IConfigScreenFactory`; porting swaps
 | `lang/en_us.json`, `lang/es_es.json` | keys | ~60 |
 | docs (`CONFIG.md`, `MANUAL_TESTING.md`) | updates | ~40 |
 
-Total ≈ 635 authored lines → under the 800-line review budget, single PR.
+The initial estimate (≈635 lines) proved low: unit 2 alone was 424 lines and the full change is now
+forecast above the 800-line review budget. On 2026-11-20 the maintainer accepted a single PR with an
+explicit `size:exception` and rejected chained PRs, because no work unit is independently usable.
 
 ## 10. Verification strategy
 

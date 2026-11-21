@@ -12,5 +12,15 @@
   "gui.nether_ores_reborn.error.spec_not_loaded": "Configuration is not loaded yet",
   "gui.nether_ores_reborn.error.invalid_number": "Enter a number between 0 and 100",
   "gui.nether_ores_reborn.error.out_of_range": "Value must be between 0 and 100",
-  "gui.nether_ores_reborn.error.save_failed": "Could not save the configuration"
+  "gui.nether_ores_reborn.error.save_failed": "Could not save the configuration",
+  "gui.nether_ores_reborn.ores.netherrack_iron_ore": "Netherrack Iron Ore",
+  "gui.nether_ores_reborn.ores.blackstone_iron_ore": "Blackstone Iron Ore",
+  "gui.nether_ores_reborn.ores.basalt_coal_ore": "Basalt Coal Ore",
+  "gui.nether_ores_reborn.ores.basalt_diamond_ore": "Basalt Diamond Ore",
+  "gui.nether_ores_reborn.ore.enabled": "Enabled",
+  "gui.nether_ores_reborn.ore.veins_per_chunk": "Veins per chunk",
+  "gui.nether_ores_reborn.ore.min_y": "Minimum Y",
+  "gui.nether_ores_reborn.ore.max_y": "Maximum Y",
+  "gui.nether_ores_reborn.ore.zero_veins_hint": "0 attempts disables generation for this ore",
+  "gui.nether_ores_reborn.out_of_domain": "(!) %s (outside UI range)"
 }

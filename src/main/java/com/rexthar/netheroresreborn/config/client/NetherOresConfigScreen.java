@@ -2,6 +2,8 @@ package com.rexthar.netheroresreborn.config.client;
 
 import com.mojang.logging.LogUtils;
 import com.rexthar.netheroresreborn.config.NetherOresRebornConfig;
+import com.rexthar.netheroresreborn.config.NetherOresRebornConfig.OreSettings;
+import com.rexthar.netheroresreborn.config.client.widgets.IntSlider;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
@@ -35,6 +37,10 @@ public class NetherOresConfigScreen extends Screen {
     private static final int WIDGET_HEIGHT = 20;
     private static final int TEXT_COLOR = 0xA0A0A0;
     private static final int ERROR_COLOR = 0xFF5555;
+
+    private static final int MAX_VEINS_PER_CHUNK = 64;
+    private static final int UI_MIN_Y = 0;
+    private static final int UI_MAX_Y = 127;
 
     private final Screen parent;
     private final Map<ForgeConfigSpec.ConfigValue<?>, Object> pending = new LinkedHashMap<>();
@@ -84,6 +90,8 @@ public class NetherOresConfigScreen extends Screen {
         }
         switch (this.page) {
             case GENERAL -> initGeneral(controlX, FIRST_ROW_Y);
+            case NETHERRACK_IRON_ORE, BLACKSTONE_IRON_ORE, BASALT_COAL_ORE, BASALT_DIAMOND_ORE ->
+                    initOre(this.page.settings(), controlX, FIRST_ROW_Y);
         }
     }
 
@@ -99,6 +107,23 @@ public class NetherOresConfigScreen extends Screen {
         this.dropMultiplierBox.setFilter(NetherOresConfigScreen::isDecimalInput);
         this.dropMultiplierBox.setValue(formatDecimal(current(NetherOresRebornConfig.GLOBAL_DROP_MULTIPLIER)));
         addRenderableWidget(this.dropMultiplierBox);
+    }
+
+    private void initOre(OreSettings ore, int controlX, int firstRowY) {
+        addRenderableWidget(CycleButton.onOffBuilder(current(ore.enabled))
+                .create(controlX, firstRowY, CONTROL_WIDTH, WIDGET_HEIGHT,
+                        Component.translatable("gui.nether_ores_reborn.ore.enabled"),
+                        (button, value) -> pending.put(ore.enabled, value)));
+
+        addRenderableWidget(new IntSlider(controlX, firstRowY + ROW_HEIGHT, CONTROL_WIDTH, WIDGET_HEIGHT,
+                current(ore.veinsPerChunk), 0, MAX_VEINS_PER_CHUNK,
+                value -> pending.put(ore.veinsPerChunk, value)));
+        addRenderableWidget(new IntSlider(controlX, firstRowY + 2 * ROW_HEIGHT, CONTROL_WIDTH, WIDGET_HEIGHT,
+                current(ore.minY), UI_MIN_Y, UI_MAX_Y,
+                value -> pending.put(ore.minY, value)));
+        addRenderableWidget(new IntSlider(controlX, firstRowY + 3 * ROW_HEIGHT, CONTROL_WIDTH, WIDGET_HEIGHT,
+                current(ore.maxY), UI_MIN_Y, UI_MAX_Y,
+                value -> pending.put(ore.maxY, value)));
     }
 
     private void initFooter(int left) {
@@ -145,12 +170,23 @@ public class NetherOresConfigScreen extends Screen {
      * each row stays a single line of code at its call site.
      */
     private void renderRowLabels(GuiGraphics graphics) {
-        if (this.page != ConfigPage.GENERAL) {
+        int labelX = (this.width - CONTENT_WIDTH) / 2;
+        if (this.page == ConfigPage.GENERAL) {
+            drawRowLabel(graphics, "gui.nether_ores_reborn.general.enable_generation", labelX, 0);
+            drawRowLabel(graphics, "gui.nether_ores_reborn.general.drop_multiplier", labelX, 1);
             return;
         }
-        int labelX = (this.width - CONTENT_WIDTH) / 2;
-        drawRowLabel(graphics, "gui.nether_ores_reborn.general.enable_generation", labelX, 0);
-        drawRowLabel(graphics, "gui.nether_ores_reborn.general.drop_multiplier", labelX, 1);
+
+        drawRowLabel(graphics, "gui.nether_ores_reborn.ore.enabled", labelX, 0);
+        drawRowLabel(graphics, "gui.nether_ores_reborn.ore.veins_per_chunk", labelX, 1);
+        drawRowLabel(graphics, "gui.nether_ores_reborn.ore.min_y", labelX, 2);
+        drawRowLabel(graphics, "gui.nether_ores_reborn.ore.max_y", labelX, 3);
+
+        if (current(this.page.settings().veinsPerChunk) == 0) {
+            graphics.drawString(this.font,
+                    Component.translatable("gui.nether_ores_reborn.ore.zero_veins_hint"),
+                    labelX, FIRST_ROW_Y + 4 * ROW_HEIGHT + 4, TEXT_COLOR, false);
+        }
     }
 
     private void drawRowLabel(GuiGraphics graphics, String translationKey, int labelX, int row) {
@@ -167,13 +203,17 @@ public class NetherOresConfigScreen extends Screen {
     }
 
     private void resetPage() {
-        switch (this.page) {
-            case GENERAL -> {
-                this.pending.put(NetherOresRebornConfig.ENABLE_GENERATION,
-                        NetherOresRebornConfig.DEFAULT_ENABLE_GENERATION);
-                this.pending.put(NetherOresRebornConfig.GLOBAL_DROP_MULTIPLIER,
-                        NetherOresRebornConfig.DEFAULT_GLOBAL_DROP_MULTIPLIER);
-            }
+        if (this.page == ConfigPage.GENERAL) {
+            this.pending.put(NetherOresRebornConfig.ENABLE_GENERATION,
+                    NetherOresRebornConfig.DEFAULT_ENABLE_GENERATION);
+            this.pending.put(NetherOresRebornConfig.GLOBAL_DROP_MULTIPLIER,
+                    NetherOresRebornConfig.DEFAULT_GLOBAL_DROP_MULTIPLIER);
+        } else {
+            OreSettings ore = this.page.settings();
+            this.pending.put(ore.enabled, NetherOresRebornConfig.DEFAULT_ORE_ENABLED);
+            this.pending.put(ore.veinsPerChunk, ore.defaults.veinsPerChunk());
+            this.pending.put(ore.minY, ore.defaults.minY());
+            this.pending.put(ore.maxY, ore.defaults.maxY());
         }
         this.error = null;
         rebuildWidgets();
@@ -183,6 +223,7 @@ public class NetherOresConfigScreen extends Screen {
         if (!commitTextFields()) {
             return;
         }
+        reconcileHeightRanges();
         try {
             applyPending();
             NetherOresRebornConfig.SPEC.save();
@@ -193,6 +234,59 @@ public class NetherOresConfigScreen extends Screen {
             return;
         }
         onClose();
+    }
+
+    /**
+     * Keeps each ore's height range ordered. Only ranges touched on this screen are considered, so a
+     * hand-edited out-of-domain value is never rewritten by an unrelated edit.
+     * <p>
+     * The bound the player moved wins. When the other bound is outside the UI domain and cannot be
+     * changed safely, the edited bound is clamped to it instead.
+     */
+    private void reconcileHeightRanges() {
+        for (ConfigPage candidate : ConfigPage.values()) {
+            OreSettings ore = candidate.settings();
+            if (ore == null) {
+                continue;
+            }
+            boolean minEdited = this.pending.containsKey(ore.minY);
+            boolean maxEdited = this.pending.containsKey(ore.maxY);
+            if (!minEdited && !maxEdited) {
+                continue;
+            }
+            int min = current(ore.minY);
+            int max = current(ore.maxY);
+            int fix = heightRangeFix(min, max, minEdited, maxEdited);
+            if (fix == 1) {
+                this.pending.put(ore.maxY, min);
+            } else if (fix == -1) {
+                this.pending.put(ore.minY, max);
+            }
+        }
+    }
+
+    /**
+     * Pure decision helper for an inverted height range: returns {@code 1} when {@code maxY} should be
+     * raised to {@code minY}, {@code -1} when {@code minY} should be lowered to {@code maxY}, and
+     * {@code 0} when no adjustment is needed.
+     * <p>
+     * A bound may be adjusted when the player edited it or when its loaded value is inside the Nether
+     * UI domain. That keeps a hand-edited out-of-domain value on the other bound from being rewritten.
+     */
+    public static int heightRangeFix(int min, int max, boolean minEdited, boolean maxEdited) {
+        if ((!minEdited && !maxEdited) || min <= max) {
+            return 0;
+        }
+        boolean minWritable = minEdited || isNetherY(min);
+        boolean maxWritable = maxEdited || isNetherY(max);
+        if (minEdited) {
+            return maxWritable ? 1 : -1;
+        }
+        return minWritable ? -1 : 1;
+    }
+
+    private static boolean isNetherY(int value) {
+        return value >= UI_MIN_Y && value <= UI_MAX_Y;
     }
 
     /**
@@ -280,20 +374,29 @@ public class NetherOresConfigScreen extends Screen {
     }
 
     /**
-     * Pages of the screen. Only the General page exists at this stage; the per-ore pages are added by
-     * the next work unit.
+     * Screen pages. The General page is followed by one page per approved ore variant.
      */
     private enum ConfigPage {
-        GENERAL("gui.nether_ores_reborn.page.general");
+        GENERAL(null),
+        NETHERRACK_IRON_ORE(NetherOresRebornConfig.NETHERRACK_IRON_ORE),
+        BLACKSTONE_IRON_ORE(NetherOresRebornConfig.BLACKSTONE_IRON_ORE),
+        BASALT_COAL_ORE(NetherOresRebornConfig.BASALT_COAL_ORE),
+        BASALT_DIAMOND_ORE(NetherOresRebornConfig.BASALT_DIAMOND_ORE);
 
-        private final String titleKey;
+        private final OreSettings settings;
 
-        ConfigPage(String titleKey) {
-            this.titleKey = titleKey;
+        ConfigPage(OreSettings settings) {
+            this.settings = settings;
+        }
+
+        OreSettings settings() {
+            return this.settings;
         }
 
         Component title() {
-            return Component.translatable(this.titleKey);
+            return this.settings == null
+                    ? Component.translatable("gui.nether_ores_reborn.page.general")
+                    : Component.translatable(this.settings.displayNameKey());
         }
     }
 }
