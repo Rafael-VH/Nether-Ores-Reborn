@@ -43,7 +43,7 @@ Antes de `0.1.2-beta` las menas se inyectaban en el step `underground_ores`, ant
 
 - [ ] En **Basalt Deltas** se generan `basalt_coal_ore`
 - [ ] En **Basalt Deltas** se generan `basalt_diamond_ore`
-- [ ] En **Basalt Deltas** se genera `blackstone_iron_ore` (a cualquier altura)
+- [ ] En **Basalt Deltas** se genera `blackstone_iron_ore` entre **Y 5 y 32**
 - [ ] En **Nether Wastes** (y demás biomas del Nether) se genera `blackstone_iron_ore` entre **Y 5 y 31**
 - [ ] En **Nether Wastes** se genera `netherrack_iron_ore`
 - [ ] En **Basalt Deltas** también se generan `netherrack_iron_ore` y `blackstone_iron_ore`
