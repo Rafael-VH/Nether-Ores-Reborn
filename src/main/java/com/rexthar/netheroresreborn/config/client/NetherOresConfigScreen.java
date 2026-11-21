@@ -3,11 +3,11 @@ package com.rexthar.netheroresreborn.config.client;
 import com.mojang.logging.LogUtils;
 import com.rexthar.netheroresreborn.config.NetherOresRebornConfig;
 import com.rexthar.netheroresreborn.config.NetherOresRebornConfig.OreSettings;
+import com.rexthar.netheroresreborn.config.client.widgets.DecimalField;
 import com.rexthar.netheroresreborn.config.client.widgets.IntSlider;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -48,7 +48,7 @@ public class NetherOresConfigScreen extends Screen {
     private ConfigPage page = ConfigPage.GENERAL;
     private boolean specReady;
     private Component error;
-    private EditBox dropMultiplierBox;
+    private DecimalField dropMultiplierField;
 
     public NetherOresConfigScreen(Screen parent) {
         super(Component.translatable("gui.nether_ores_reborn.title"));
@@ -58,7 +58,7 @@ public class NetherOresConfigScreen extends Screen {
     @Override
     protected void init() {
         this.clearWidgets();
-        this.dropMultiplierBox = null;
+        this.dropMultiplierField = null;
         this.specReady = NetherOresRebornConfig.SPEC.isLoaded();
 
         int left = (this.width - CONTENT_WIDTH) / 2;
@@ -101,12 +101,12 @@ public class NetherOresConfigScreen extends Screen {
                         Component.translatable("gui.nether_ores_reborn.general.enable_generation"),
                         (button, value) -> pending.put(NetherOresRebornConfig.ENABLE_GENERATION, value)));
 
-        this.dropMultiplierBox = new EditBox(this.font, controlX, firstRowY + ROW_HEIGHT, CONTROL_WIDTH,
-                WIDGET_HEIGHT, Component.translatable("gui.nether_ores_reborn.general.drop_multiplier"));
-        this.dropMultiplierBox.setMaxLength(8);
-        this.dropMultiplierBox.setFilter(NetherOresConfigScreen::isDecimalInput);
-        this.dropMultiplierBox.setValue(formatDecimal(current(NetherOresRebornConfig.GLOBAL_DROP_MULTIPLIER)));
-        addRenderableWidget(this.dropMultiplierBox);
+        this.dropMultiplierField = new DecimalField(this.font, controlX, firstRowY + ROW_HEIGHT,
+                CONTROL_WIDTH, WIDGET_HEIGHT,
+                Component.translatable("gui.nether_ores_reborn.general.drop_multiplier"),
+                current(NetherOresRebornConfig.GLOBAL_DROP_MULTIPLIER), 0.0D, 100.0D,
+                value -> pending.put(NetherOresRebornConfig.GLOBAL_DROP_MULTIPLIER, value));
+        addRenderableWidget(this.dropMultiplierField);
     }
 
     private void initOre(OreSettings ore, int controlX, int firstRowY) {
@@ -124,6 +124,13 @@ public class NetherOresConfigScreen extends Screen {
         addRenderableWidget(new IntSlider(controlX, firstRowY + 3 * ROW_HEIGHT, CONTROL_WIDTH, WIDGET_HEIGHT,
                 current(ore.maxY), UI_MIN_Y, UI_MAX_Y,
                 value -> pending.put(ore.maxY, value)));
+
+        this.dropMultiplierField = new DecimalField(this.font, controlX, firstRowY + 4 * ROW_HEIGHT,
+                CONTROL_WIDTH, WIDGET_HEIGHT,
+                Component.translatable("gui.nether_ores_reborn.ore.drop_multiplier"),
+                current(ore.dropMultiplier), 0.0D, 100.0D,
+                value -> pending.put(ore.dropMultiplier, value));
+        addRenderableWidget(this.dropMultiplierField);
     }
 
     private void initFooter(int left) {
@@ -181,11 +188,12 @@ public class NetherOresConfigScreen extends Screen {
         drawRowLabel(graphics, "gui.nether_ores_reborn.ore.veins_per_chunk", labelX, 1);
         drawRowLabel(graphics, "gui.nether_ores_reborn.ore.min_y", labelX, 2);
         drawRowLabel(graphics, "gui.nether_ores_reborn.ore.max_y", labelX, 3);
+        drawRowLabel(graphics, "gui.nether_ores_reborn.ore.drop_multiplier", labelX, 4);
 
         if (current(this.page.settings().veinsPerChunk) == 0) {
             graphics.drawString(this.font,
                     Component.translatable("gui.nether_ores_reborn.ore.zero_veins_hint"),
-                    labelX, FIRST_ROW_Y + 4 * ROW_HEIGHT + 4, TEXT_COLOR, false);
+                    labelX, FIRST_ROW_Y + 5 * ROW_HEIGHT + 2, TEXT_COLOR, false);
         }
     }
 
@@ -195,6 +203,9 @@ public class NetherOresConfigScreen extends Screen {
     }
 
     private void changePage(int delta) {
+        if (!commitDropMultiplier()) {
+            return;
+        }
         ConfigPage[] pages = ConfigPage.values();
         int index = Math.floorMod(this.page.ordinal() + delta, pages.length);
         this.page = pages[index];
@@ -214,13 +225,30 @@ public class NetherOresConfigScreen extends Screen {
             this.pending.put(ore.veinsPerChunk, ore.defaults.veinsPerChunk());
             this.pending.put(ore.minY, ore.defaults.minY());
             this.pending.put(ore.maxY, ore.defaults.maxY());
+            this.pending.put(ore.dropMultiplier, ore.defaults.dropMultiplier());
         }
         this.error = null;
         rebuildWidgets();
     }
 
+    /**
+     * Commits the decimal field on the active page. An invalid value keeps the player on that page so
+     * it cannot be silently discarded by navigating away or by pressing Done.
+     */
+    private boolean commitDropMultiplier() {
+        if (this.dropMultiplierField == null) {
+            return true;
+        }
+        this.dropMultiplierField.commit();
+        if (!this.dropMultiplierField.isValid()) {
+            this.error = Component.translatable(this.dropMultiplierField.errorKey());
+            return false;
+        }
+        return true;
+    }
+
     private void saveAndClose() {
-        if (!commitTextFields()) {
+        if (!commitDropMultiplier()) {
             return;
         }
         reconcileHeightRanges();
@@ -289,30 +317,6 @@ public class NetherOresConfigScreen extends Screen {
         return value >= UI_MIN_Y && value <= UI_MAX_Y;
     }
 
-    /**
-     * Moves text field contents into {@link #pending}. Returns {@code false} when any field holds an
-     * invalid value, in which case nothing is applied or saved.
-     */
-    private boolean commitTextFields() {
-        if (this.dropMultiplierBox == null) {
-            return true;
-        }
-        String raw = this.dropMultiplierBox.getValue().trim();
-        if (!isDecimalInput(raw) || !hasDigits(raw)) {
-            this.error = Component.translatable("gui.nether_ores_reborn.error.invalid_number");
-            rebuildWidgets();
-            return false;
-        }
-        double parsed = Double.parseDouble(raw);
-        if (parsed < 0.0D || parsed > 100.0D) {
-            this.error = Component.translatable("gui.nether_ores_reborn.error.out_of_range");
-            rebuildWidgets();
-            return false;
-        }
-        this.pending.put(NetherOresRebornConfig.GLOBAL_DROP_MULTIPLIER, parsed);
-        return true;
-    }
-
     private void applyPending() {
         for (Map.Entry<ForgeConfigSpec.ConfigValue<?>, Object> entry : this.pending.entrySet()) {
             setRaw(entry.getKey(), entry.getValue());
@@ -347,30 +351,6 @@ public class NetherOresConfigScreen extends Screen {
         if (this.minecraft != null) {
             this.minecraft.setScreen(this.parent);
         }
-    }
-
-    private static boolean isDecimalInput(String raw) {
-        return raw.matches("\\d{0,3}(\\.\\d{0,2})?");
-    }
-
-    /**
-     * The character filter also accepts an empty string and a bare decimal point, neither of which
-     * {@link Double#parseDouble(String)} can parse.
-     */
-    private static boolean hasDigits(String raw) {
-        for (int i = 0; i < raw.length(); i++) {
-            if (Character.isDigit(raw.charAt(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static String formatDecimal(double value) {
-        if (value == Math.rint(value)) {
-            return Long.toString((long) value);
-        }
-        return Double.toString(value);
     }
 
     /**

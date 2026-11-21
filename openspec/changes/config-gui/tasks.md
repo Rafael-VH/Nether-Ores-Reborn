@@ -68,10 +68,16 @@ checks listed under them (there is no UI test harness in this project).
 
 ### 4. Decimal fields, Reset and out-of-domain handling
 
-- [ ] 4.1 Add `DecimalField` (character filter, validation on Enter and focus loss, `isValid()`), use it
+- [x] 4.1 Add `DecimalField` (character filter, validation on Enter and focus loss, `isValid()`), use it
       for both `dropMultiplier` scopes, and block Done while any field is invalid
   - **Depends on:** 3.2
-  - **Verify:** `abc`, `-1`, `100.1` and `50.55` are rejected; `0`, `50`, `100` are accepted
+  - **Verify:** `abc`, `-1`, `50.555`, empty text and a bare `.` are rejected as invalid input;
+    `100.1` is rejected as out of range; `0`, `50`, `100` and `50.55` are accepted. Two decimal places
+    are allowed by the design, so `50.55` is valid; the earlier wording in this task was incorrect.
+  - **Observed:** `./gradlew build` green. `jshell` against the compiled classes returned
+    `invalid_number` for `abc`, `-1`, `50.555`, `""` and `.`; `out_of_range` for `100.1`; and `null`
+    (accepted) for `0`, `50`, `100` and `50.55`. An invalid field now blocks both Done and page
+    navigation, so the value cannot be silently discarded.
 - [ ] 4.2 Add per-page Reset (defaults into `pending` only) and the out-of-domain marker that keeps the
       raw value untouched until the player edits that control
   - **Depends on:** 4.1
@@ -79,6 +85,11 @@ checks listed under them (there is no UI test harness in this project).
     unrelated Done
   - **Verify:** manual checks against `ORE_DEFAULTS`; file diff before/after confirming the untouched
     value
+  - **Observed:** Reset now writes every control on the active page into `pending`, including
+    `dropMultiplier`; `IntSlider` renders out-of-domain raw values with an `(outside UI range)` marker
+    and only replaces them when that slider is moved. `heightRangeFix` was verified in `jshell` to
+    leave an untouched out-of-domain bound unchanged. The manual `.toml` comparison is still pending
+    the checklist in unit 5.
 
 ### 5. Warnings, i18n and documentation
 

@@ -21,6 +21,7 @@
   "gui.nether_ores_reborn.ore.veins_per_chunk": "Veins per chunk",
   "gui.nether_ores_reborn.ore.min_y": "Minimum Y",
   "gui.nether_ores_reborn.ore.max_y": "Maximum Y",
+  "gui.nether_ores_reborn.ore.drop_multiplier": "Drop multiplier",
   "gui.nether_ores_reborn.ore.zero_veins_hint": "0 attempts disables generation for this ore",
   "gui.nether_ores_reborn.out_of_domain": "(!) %s (outside UI range)"
 }

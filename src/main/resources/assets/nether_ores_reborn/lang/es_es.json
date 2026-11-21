@@ -21,6 +21,7 @@
   "gui.nether_ores_reborn.ore.veins_per_chunk": "Venas por chunk",
   "gui.nether_ores_reborn.ore.min_y": "Y mínima",
   "gui.nether_ores_reborn.ore.max_y": "Y máxima",
+  "gui.nether_ores_reborn.ore.drop_multiplier": "Multiplicador de drops",
   "gui.nether_ores_reborn.ore.zero_veins_hint": "0 intentos desactiva la generación de esta mena",
   "gui.nether_ores_reborn.out_of_domain": "(!) %s (fuera del rango de la interfaz)"
 }
